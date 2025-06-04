@@ -40,7 +40,7 @@ AgroFlow is a comprehensive agricultural business management system designed to 
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/AgroFlow.git
+   git clone https://github.com/lokireddymanikantaredddy/AgroFlow.git
    cd AgroFlow
    ```
 
