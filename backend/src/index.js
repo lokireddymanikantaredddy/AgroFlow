@@ -21,15 +21,30 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
+// CORS Configuration
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'https://agroflow.netlify.app'
+];
+
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production'
-    ? ['https://agroflow.netlify.app']
-    : ['http://localhost:5173', 'http://localhost:5174'],
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: false // Since we're using token-based auth, not cookie-based
+  credentials: false
 }));
+
+// Body parser middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -49,10 +64,10 @@ app.use('/api/customers', authenticate, customerRoutes);
 app.use('/api/sales', authenticate, saleRoutes);
 app.use('/api/dashboard', authenticate, dashboardRoutes);
 
-// Error handling
+// Error handling middleware
 app.use(errorHandler);
 
-// Health check
+// Health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });

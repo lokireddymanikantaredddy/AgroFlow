@@ -4,9 +4,9 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/index.js",
     "start": "node src/index.js",
-    "create-admin": "node scripts/createAdmin.js"
+    "dev": "nodemon src/index.js",
+    "build": "echo 'No build step needed for backend'"
   },
   "dependencies": {
     "@sendgrid/mail": "^7.7.0",
