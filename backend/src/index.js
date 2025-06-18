@@ -2,24 +2,22 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
 
-// Routes
+// Import routes
 import authRoutes from './routes/auth.js';
 import productRoutes from './routes/products.js';
 import customerRoutes from './routes/customers.js';
 import saleRoutes from './routes/sales.js';
 import dashboardRoutes from './routes/dashboard.js';
 
-// Middleware
+// Import middleware
 import { errorHandler } from './middleware/errorHandler.js';
 import { authenticate } from './middleware/auth.js';
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8080;
 
 // CORS Configuration
 const allowedOrigins = [
@@ -44,18 +42,14 @@ app.use(cors({
   credentials: false
 }));
 
-// Body parser middleware
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Connect to MongoDB
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/agroflow';
-mongoose.connect(MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log('Connected to MongoDB:', MONGODB_URI))
-.catch(err => console.error('MongoDB connection error:', err));
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/agroflow')
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('MongoDB connection error:', err));
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -64,7 +58,7 @@ app.use('/api/customers', authenticate, customerRoutes);
 app.use('/api/sales', authenticate, saleRoutes);
 app.use('/api/dashboard', authenticate, dashboardRoutes);
 
-// Error handling middleware
+// Error handling
 app.use(errorHandler);
 
 // Health check endpoint
