@@ -5,9 +5,11 @@ import './index.css';
 import axios from 'axios';
 
 // Configure axios defaults
-axios.defaults.baseURL = 'https://agroflow.netlify.app';
+axios.defaults.baseURL = import.meta.env.PROD 
+  ? 'https://agroflow.netlify.app' 
+  : 'http://localhost:5000';
 axios.defaults.headers.common['Content-Type'] = 'application/json';
-axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = false; // Changed from true to false since we're using token-based auth
 
 // Add token to requests if it exists
 const token = localStorage.getItem('token');

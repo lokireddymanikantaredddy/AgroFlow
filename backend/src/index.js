@@ -23,8 +23,12 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:5174', 'http://localhost:5173', 'https://agroflow.netlify.app'],
-  credentials: true
+  origin: process.env.NODE_ENV === 'production'
+    ? ['https://agroflow.netlify.app']
+    : ['http://localhost:5173', 'http://localhost:5174'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: false // Since we're using token-based auth, not cookie-based
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
